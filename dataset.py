@@ -181,7 +181,7 @@ def process_data(path):
     images_list = []
     labels_list = []
     for batch in all_batch:
-        folder_name = batch.split("\\")[-1]
+        folder_name = batch.split("/")[-1]
         if folder_name == "extras":
             continue
         filename = glob.glob(path + folder_name + "/JSON/*")[0]
