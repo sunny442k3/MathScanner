@@ -182,6 +182,8 @@ def process_data(path):
     labels_list = []
     for batch in all_batch:
         folder_name = batch.split("\\")[-1]
+        if folder_name == "extras":
+            continue
         filename = glob.glob(path + folder_name + "/JSON/*")[0]
         data = read_json(filename)
         images_list += [row["filename"] for row in data]
