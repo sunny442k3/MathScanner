@@ -20,7 +20,7 @@ def read_json(filename):
         ]
         return data
 
-
+        
 class CustomDataset(Dataset):
 
     def __init__(self, paths, labels, width, height):
@@ -107,7 +107,18 @@ class Tokenizer:
             self.vocab.append(word)
             self.token2text[idx] = word 
             self.text2token[word] = idx 
-    
+
+
+    def build_vocab_from_dict(self, vocab_dict):
+        for idx, (key, val) in enumerate(vocab_dict.items(),4):
+            val = val.lower()
+            key = int(key)
+            if val not in self.vocab and key not in self.token2text:
+                self.vocab.append(key)
+                self.token2text[key] = val
+                self.text2token[val] = key
+                
+
 
     def __len__(self):
         return len(self.vocab)
@@ -174,7 +185,7 @@ def get_loader(train_dataset, valid_dataset, batch_size=64, shuffle=False, pad_i
     return train_loader, valid_loader
 
 
-def process_data(path):
+def process_data(path, ignore_folder = []):
     if "/" != path[-1]:
         path += "/"
     all_batch = glob.glob(path + "*")
@@ -182,7 +193,7 @@ def process_data(path):
     labels_list = []
     for batch in all_batch:
         folder_name = batch.split("/")[-1]
-        if folder_name == "extras":
+        if folder_name in ignore_folder:
             continue
         filename = glob.glob(path + folder_name + "/JSON/*")[0]
         data = read_json(filename)
